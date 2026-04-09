@@ -18,5 +18,11 @@ namespace eUseControl.Domain.Entities
             var bytes = System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(password));
             PasswordHash = Convert.ToHexString(bytes).ToLower();
         }
+
+        public bool CheckPassword(string password)
+        {
+            var bytes = System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(password));
+            return PasswordHash == Convert.ToHexString(bytes).ToLower();
+        }
     }
 }
