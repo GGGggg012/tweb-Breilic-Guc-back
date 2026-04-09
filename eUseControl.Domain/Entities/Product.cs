@@ -16,7 +16,7 @@ namespace eUseControl.Domain.Entities
         public void DecreaseStock(int amount)
         {
             if (amount > Stock)
-                throw new Exception("Not enough stock");
+                throw new InvalidOperationException("Not enough stock");
             Stock -= amount;
         }
     }
