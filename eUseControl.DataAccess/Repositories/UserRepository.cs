@@ -35,6 +35,11 @@ namespace eUseControl.DataAccess.Repositories
             _context.SaveChanges();
         }
 
+        public bool ExistsByEmail(string email)
+        {
+            return _context.Users.Any(u => u.Email == email);
+        }
+
         public void Update(UserData user)
         {
             _context.Users.Update(user);
