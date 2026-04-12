@@ -7,7 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\eUseControl.Business\eUseControl.Business.csproj" />
+    <ProjectReference Include="..\eUseControl.DataAccess\eUseControl.DataAccess.csproj" />
+    <ProjectReference Include="..\eUseControl.Model\eUseControl.Model.csproj" />
   </ItemGroup>
 
 </Project>
