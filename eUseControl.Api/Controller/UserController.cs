@@ -1,72 +1,48 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using eUseControl.Api.Domain;
+using eUseControl.Business;
+using eUseControl.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eUseControl.Api.Controller
 {
-    [Route("api/user")]
+    [Route("api/users")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
-        private static readonly List<User> _users = new();
-        private static int _nextId = 1;
+        private readonly UserBusiness _userBusiness;
 
-        [HttpGet("all")]
-        public IActionResult GetAllUsers()
+        public UserController(UserBusiness userBusiness)
         {
-            return Ok(_users);
+            _userBusiness = userBusiness;
+        }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var users = _userBusiness.GetAll();
+            return Ok(users);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetUserById(int id)
+        public IActionResult GetById(int id)
         {
-            var user = _users.FirstOrDefault(u => u.Id == id);
+            var user = _userBusiness.GetById(id);
             if (user == null)
-            {
-                return NotFound(new { Message = $"User with ID {id} not found" });
-            }
-
+                return NotFound(new { message = $"User {id} not found" });
             return Ok(user);
         }
 
-        [HttpPost]
-        public IActionResult CreateUser([FromBody] User user)
-        {
-            user.Id = _nextId++;
-            user.CreatedAt = DateTime.UtcNow;
-            _users.Add(user);
-            return Created($"/api/user/{user.Id}", user);
-        }
-
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] User updatedUser)
+        public IActionResult Update(int id, [FromBody] RegisterRequest req)
         {
-            var existingUser = _users.FirstOrDefault(u => u.Id == id);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            if (existingUser == null)
-            {
-                return NotFound(new { Message = $"User with ID {id} not found" });
-            }
-
-            existingUser.UserName = updatedUser.UserName;
-            existingUser.Email = updatedUser.Email;
-
-            return Ok(existingUser);
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult DeleteUser(int id)
-        {
-            var user = _users.FirstOrDefault(u => u.Id == id);
-            if (user == null)
-            {
-                return NotFound(new { Message = $"User with ID {id} not found" });
-            }
-
-            _users.Remove(user);
-            return NoContent();
+            var result = _userBusiness.Update(id, req);
+            if (result == null)
+                return NotFound(new { message = $"User {id} not found" });
+            return Ok(result);
         }
     }
 }
