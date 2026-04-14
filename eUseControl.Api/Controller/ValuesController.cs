@@ -1,4 +1,3 @@
-﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eUseControl.Api.Controller
@@ -10,7 +9,7 @@ namespace eUseControl.Api.Controller
         [HttpGet("ping")]
         public IActionResult Ping()
         {
-            return Ok("pong");
+            return Ok(new { status = "ok", message = "pong" });
         }
     }
 }
