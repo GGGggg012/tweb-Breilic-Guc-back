@@ -30,6 +30,7 @@ namespace eUseControl.Business
             if (!user.CheckPassword(req.Password))
                 throw new UnauthorizedAccessException("Invalid email or password");
 
+            // generate token and return it
             return GenerateJwt(user);
         }
 
