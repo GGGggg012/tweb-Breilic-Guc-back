@@ -19,11 +19,13 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlite(connStr));
 // repositories
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<ProductRepository>();
+builder.Services.AddScoped<OrderRepository>();
 
 // business layer
 builder.Services.AddScoped<UserBusiness>();
 builder.Services.AddScoped<AuthBusiness>();
 builder.Services.AddScoped<ProductBusiness>();
+builder.Services.AddScoped<OrderBusiness>();
 
 // jwt auth
 var jwtKey = builder.Configuration["Jwt:Key"];
