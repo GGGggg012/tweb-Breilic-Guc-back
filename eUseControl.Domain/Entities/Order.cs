@@ -1,3 +1,5 @@
+using System;
+
 namespace eUseControl.Domain.Entities
 {
     public class Order
@@ -8,5 +10,11 @@ namespace eUseControl.Domain.Entities
         public int Quantity { get; set; }
         public decimal TotalPrice { get; set; }
         public string Status { get; set; } = "Pending";
+        public DateTime CreatedAt { get; set; }
+
+        public void CalculateTotal(decimal unitPrice)
+        {
+            TotalPrice = unitPrice * Quantity;
+        }
     }
 }
