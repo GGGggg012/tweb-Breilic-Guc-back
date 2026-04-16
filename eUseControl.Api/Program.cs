@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(eUseControl.Business.Mapping.MappingProfile));
 
 // database
 var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
