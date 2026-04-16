@@ -1,3 +1,4 @@
+using AutoMapper;
 using System.Collections.Generic;
 using eUseControl.DataAccess.Repositories;
 using eUseControl.Domain.Entities;
@@ -8,41 +9,32 @@ namespace eUseControl.Business
     public class ProductBusiness
     {
         private readonly ProductRepository _repo;
+        private readonly IMapper _mapper;
 
-        public ProductBusiness(ProductRepository repo)
+        public ProductBusiness(ProductRepository repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
         public List<ProductView> GetAll()
         {
             var products = _repo.GetAll();
-            var result = new List<ProductView>();
-            foreach (var p in products)
-            {
-                result.Add(MapToView(p));
-            }
-            return result;
+            return _mapper.Map<List<ProductView>>(products);
         }
 
         public ProductView GetById(int id)
         {
             var p = _repo.GetById(id);
             if (p == null) return null;
-            return MapToView(p);
+            return _mapper.Map<ProductView>(p);
         }
 
         public ProductView Create(ProductRequest req)
         {
-            var product = new Product
-            {
-                Name = req.Name,
-                Description = req.Description,
-                Price = req.Price,
-                Stock = req.Stock
-            };
+            var product = _mapper.Map<Product>(req);
             _repo.Add(product);
-            return MapToView(product);
+            return _mapper.Map<ProductView>(product);
         }
 
         public ProductView Update(int id, ProductRequest req)
@@ -55,25 +47,12 @@ namespace eUseControl.Business
             product.Price = req.Price;
             product.Stock = req.Stock;
             _repo.Update(product);
-            return MapToView(product);
+            return _mapper.Map<ProductView>(product);
         }
 
         public bool Delete(int id)
         {
             return _repo.Delete(id);
-        }
-
-        private ProductView MapToView(Product p)
-        {
-            return new ProductView
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
-                Price = p.Price,
-                Stock = p.Stock,
-                InStock = p.IsAvailable()
-            };
         }
     }
 }
