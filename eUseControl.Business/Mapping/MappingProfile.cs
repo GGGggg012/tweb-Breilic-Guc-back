@@ -8,6 +8,12 @@ namespace eUseControl.Business.Mapping
     {
         public MappingProfile()
         {
+            CreateMap<UserData, UserView>();
+            CreateMap<RegisterRequest, UserData>();
+            CreateMap<Product, ProductView>()
+                .ForMember(dest => dest.InStock, opt => opt.MapFrom(src => src.IsAvailable()));
+            CreateMap<ProductRequest, Product>();
+            CreateMap<Order, OrderView>();
         }
     }
 }
