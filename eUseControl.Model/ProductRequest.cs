@@ -9,6 +9,7 @@ namespace eUseControl.Model
         public string Description { get; set; } = string.Empty;
 
         [Required]
+        [Range(0.01, 999999.99)]
         public decimal Price { get; set; }
         public int Stock { get; set; }
     }
