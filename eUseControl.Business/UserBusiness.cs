@@ -1,6 +1,6 @@
+using AutoMapper;
 using System.Collections.Generic;
 using eUseControl.DataAccess.Repositories;
-using eUseControl.Domain.Entities;
 using eUseControl.Model;
 
 namespace eUseControl.Business
@@ -8,28 +8,25 @@ namespace eUseControl.Business
     public class UserBusiness
     {
         private readonly UserRepository _repo;
+        private readonly IMapper _mapper;
 
-        public UserBusiness(UserRepository repo)
+        public UserBusiness(UserRepository repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
         public List<UserView> GetAll()
         {
             var users = _repo.GetAll();
-            var result = new List<UserView>();
-            foreach (var u in users)
-            {
-                result.Add(MapToView(u));
-            }
-            return result;
+            return _mapper.Map<List<UserView>>(users);
         }
 
         public UserView GetById(int id)
         {
             var user = _repo.GetById(id);
             if (user == null) return null;
-            return MapToView(user);
+            return _mapper.Map<UserView>(user);
         }
 
         public UserView Update(int id, RegisterRequest req)
@@ -41,21 +38,7 @@ namespace eUseControl.Business
             user.Username = req.Username;
             user.Phone = req.Phone;
             _repo.Update(user);
-            return MapToView(user);
-        }
-
-        private UserView MapToView(UserData u)
-        {
-            return new UserView
-            {
-                Id = u.Id,
-                FirstName = u.FirstName,
-                Username = u.Username,
-                Email = u.Email,
-                Phone = u.Phone,
-                Role = u.Role,
-                RegisteredOn = u.RegisteredOn
-            };
+            return _mapper.Map<UserView>(user);
         }
     }
 }
