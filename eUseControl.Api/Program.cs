@@ -61,6 +61,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<eUseControl.Api.Middleware.ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();  // must come before UseAuthorization
 app.UseAuthorization();
