@@ -21,15 +21,8 @@ namespace eUseControl.Api.Controller
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            try
-            {
-                var token = _authBusiness.Login(req);
-                return Ok(new { token });
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { message = ex.Message });
-            }
+            var token = _authBusiness.Login(req);
+            return Ok(new { token });
         }
 
         [HttpPost("register")]
@@ -38,15 +31,8 @@ namespace eUseControl.Api.Controller
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            try
-            {
-                _authBusiness.Register(req);
-                return StatusCode(201, new { message = "Registered successfully" });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(new { message = ex.Message });
-            }
+            _authBusiness.Register(req);
+            return StatusCode(201, new { message = "Registered successfully" });
         }
     }
 }
