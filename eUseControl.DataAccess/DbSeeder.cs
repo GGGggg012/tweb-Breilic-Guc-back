@@ -40,7 +40,9 @@ namespace eUseControl.DataAccess
             context.Products.AddRange(
                 new Product { Name = "Economy Ticket", Description = "Basic seat", Price = 120.00m, Stock = 100 },
                 new Product { Name = "Business Ticket", Description = "Business class", Price = 450.00m, Stock = 30 },
-                new Product { Name = "First Class Ticket", Description = "Premium seat", Price = 980.00m, Stock = 10 }
+                new Product { Name = "First Class Ticket", Description = "Premium seat", Price = 980.00m, Stock = 10 },
+                new Product { Name = "Child Ticket", Description = "For kids under 12", Price = 60.00m, Stock = 50 },
+                new Product { Name = "Senior Ticket", Description = "For passengers 65+", Price = 90.00m, Stock = 40 }
             );
             context.SaveChanges();
         }
