@@ -27,7 +27,7 @@ namespace eUseControl.DataAccess
                 RegisteredOn = DateTime.UtcNow
             };
             // forgot to call SetPasswordHash here - will fix in next commit
-            admin.PasswordHash = "admin123";
+            admin.SetPasswordHash("admin123");
 
             context.Users.Add(admin);
             context.SaveChanges();
