@@ -2,6 +2,7 @@ using eUseControl.Business;
 using eUseControl.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace eUseControl.Api.Controller
 {
@@ -43,6 +44,27 @@ namespace eUseControl.Api.Controller
             if (result == null)
                 return NotFound(new { message = $"User {id} not found" });
             return Ok(result);
+        }
+
+        [HttpPost("change-password")]
+        public IActionResult ChangePassword([FromBody] ChangePasswordRequest req)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            _userBusiness.ChangePassword(userId, req);
+            return Ok(new { message = "Password changed" });
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult Delete(int id)
+        {
+            var deleted = _userBusiness.Delete(id);
+            if (!deleted)
+                return NotFound(new { message = $"User {id} not found" });
+            return NoContent();
         }
     }
 }
