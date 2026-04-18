@@ -45,5 +45,14 @@ namespace eUseControl.DataAccess.Repositories
             _context.Users.Update(user);
             _context.SaveChanges();
         }
+
+        public bool Delete(int id)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Id == id);
+            if (user == null) return false;
+            user.IsActive = false;
+            _context.SaveChanges();
+            return true;
+        }
     }
 }
