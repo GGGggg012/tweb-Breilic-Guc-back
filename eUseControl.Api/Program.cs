@@ -71,6 +71,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<eUseControl.Api.Middleware.ExceptionMiddleware>();
 app.UseHttpsRedirection();
+app.UseCors("AllowAll");
 app.UseAuthentication();  // must come before UseAuthorization
 app.UseAuthorization();
 app.MapControllers();
