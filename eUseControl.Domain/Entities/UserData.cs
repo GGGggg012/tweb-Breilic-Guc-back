@@ -11,6 +11,7 @@ namespace eUseControl.Domain.Entities
         public string PasswordHash { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
         public string Role { get; set; } = "User";
+        public bool IsActive { get; set; } = true;
         public DateTime RegisteredOn { get; set; }
 
         public void SetPasswordHash(string password)
