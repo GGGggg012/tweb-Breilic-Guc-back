@@ -1,12 +1,23 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace eUseControl.Domain.Entities
 {
     public class UserData
     {
+        [Key]
         public int Id { get; set; }
+
+        [Required]
+        [MaxLength(50)]
         public string FirstName { get; set; } = string.Empty;
+
+        [Required]
+        [MaxLength(30)]
         public string Username { get; set; } = string.Empty;
+
+        [Required]
+        [MaxLength(100)]
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
