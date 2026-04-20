@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using eUseControl.DataAccess.Repositories;
 using eUseControl.Domain.Entities;
 using eUseControl.Model;
@@ -26,8 +27,9 @@ namespace eUseControl.Business
             return result;
         }
 
-        public List<OrderView> GetByUser(int userId)
+        public List<OrderView> GetByUser(ClaimsPrincipal principal)
         {
+            var userId = ExtractUserId(principal);
             var orders = _orderRepo.GetByUserId(userId);
             var result = new List<OrderView>();
             foreach (var o in orders)
@@ -35,8 +37,10 @@ namespace eUseControl.Business
             return result;
         }
 
-        public OrderView Create(int userId, OrderRequest req)
+        public OrderView Create(ClaimsPrincipal principal, OrderRequest req)
         {
+            var userId = ExtractUserId(principal);
+
             var product = _productRepo.GetById(req.ProductId);
             if (product == null)
                 throw new InvalidOperationException("Product not found");
@@ -55,6 +59,14 @@ namespace eUseControl.Business
 
             _orderRepo.Add(order);
             return MapToView(order);
+        }
+
+        private int ExtractUserId(ClaimsPrincipal principal)
+        {
+            var value = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(value))
+                throw new UnauthorizedAccessException("User identity not found in token");
+            return int.Parse(value);
         }
 
         private OrderView MapToView(Order o)
