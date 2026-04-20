@@ -2,7 +2,6 @@ using eUseControl.Business;
 using eUseControl.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace eUseControl.Api.Controller
 {
@@ -28,8 +27,7 @@ namespace eUseControl.Api.Controller
         [HttpGet("my")]
         public IActionResult GetMyOrders()
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            return Ok(_orderBusiness.GetByUser(userId));
+            return Ok(_orderBusiness.GetByUser(User));
         }
 
         [HttpPost]
@@ -38,17 +36,8 @@ namespace eUseControl.Api.Controller
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            try
-            {
-                var order = _orderBusiness.Create(userId, req);
-                return StatusCode(201, order);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            var order = _orderBusiness.Create(User, req);
+            return StatusCode(201, order);
         }
     }
 }
