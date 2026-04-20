@@ -2,7 +2,6 @@ using eUseControl.Business;
 using eUseControl.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace eUseControl.Api.Controller
 {
@@ -21,8 +20,7 @@ namespace eUseControl.Api.Controller
         [HttpGet]
         public IActionResult GetAll()
         {
-            var users = _userBusiness.GetAll();
-            return Ok(users);
+            return Ok(_userBusiness.GetAll());
         }
 
         [HttpGet("{id}")]
@@ -52,8 +50,7 @@ namespace eUseControl.Api.Controller
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            _userBusiness.ChangePassword(userId, req);
+            _userBusiness.ChangePassword(User, req);
             return Ok(new { message = "Password changed" });
         }
 
