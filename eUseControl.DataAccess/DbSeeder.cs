@@ -26,7 +26,6 @@ namespace eUseControl.DataAccess
                 Role = "Admin",
                 RegisteredOn = DateTime.UtcNow
             };
-            // forgot to call SetPasswordHash here - will fix in next commit
             admin.SetPasswordHash("admin123");
 
             context.Users.Add(admin);
