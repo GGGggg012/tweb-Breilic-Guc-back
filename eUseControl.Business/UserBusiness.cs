@@ -1,6 +1,4 @@
-using AutoMapper;
-using System.Collections.Generic;
-using System.Linq;
+using System.Security.Claims;
 using eUseControl.DataAccess.Repositories;
 using eUseControl.Model;
 
@@ -9,25 +7,26 @@ namespace eUseControl.Business
     public class UserBusiness
     {
         private readonly UserRepository _repo;
-        private readonly IMapper _mapper;
 
-        public UserBusiness(UserRepository repo, IMapper mapper)
+        public UserBusiness(UserRepository repo)
         {
             _repo = repo;
-            _mapper = mapper;
         }
 
         public List<UserView> GetAll()
         {
             var users = _repo.GetAll().Where(u => u.IsActive).ToList();
-            return _mapper.Map<List<UserView>>(users);
+            var result = new List<UserView>();
+            foreach (var u in users)
+                result.Add(MapToView(u));
+            return result;
         }
 
         public UserView GetById(int id)
         {
             var user = _repo.GetById(id);
             if (user == null || !user.IsActive) return null;
-            return _mapper.Map<UserView>(user);
+            return MapToView(user);
         }
 
         public UserView Update(int id, RegisterRequest req)
@@ -39,12 +38,13 @@ namespace eUseControl.Business
             user.Username = req.Username;
             user.Phone = req.Phone;
             _repo.Update(user);
-            return _mapper.Map<UserView>(user);
+            return MapToView(user);
         }
 
-        public void ChangePassword(int id, ChangePasswordRequest req)
+        public void ChangePassword(ClaimsPrincipal principal, ChangePasswordRequest req)
         {
-            var user = _repo.GetById(id);
+            var userId = ExtractUserId(principal);
+            var user = _repo.GetById(userId);
             if (user == null)
                 throw new System.InvalidOperationException("User not found");
 
@@ -58,6 +58,29 @@ namespace eUseControl.Business
         public bool Delete(int id)
         {
             return _repo.Delete(id);
+        }
+
+        private int ExtractUserId(ClaimsPrincipal principal)
+        {
+            var value = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(value))
+                throw new System.UnauthorizedAccessException("User identity not found in token");
+            return int.Parse(value);
+        }
+
+        private UserView MapToView(Domain.Entities.UserData u)
+        {
+            return new UserView
+            {
+                Id = u.Id,
+                FirstName = u.FirstName,
+                Username = u.Username,
+                Email = u.Email,
+                Phone = u.Phone,
+                Role = u.Role,
+                IsActive = u.IsActive,
+                RegisteredOn = u.RegisteredOn
+            };
         }
     }
 }
