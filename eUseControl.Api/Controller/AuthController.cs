@@ -15,6 +15,9 @@ namespace eUseControl.Api.Controller
             _authBusiness = authBusiness;
         }
 
+        /// <summary>
+        /// Login with email and password, returns JWT token
+        /// </summary>
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest req)
         {
