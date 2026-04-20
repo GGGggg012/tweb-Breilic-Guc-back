@@ -16,6 +16,9 @@ namespace eUseControl.Api.Controller
             _productBusiness = productBusiness;
         }
 
+        /// <summary>
+        /// Get all products
+        /// </summary>
         [HttpGet]
         public IActionResult GetAll()
         {
